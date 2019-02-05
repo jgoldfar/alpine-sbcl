@@ -1,0 +1,24 @@
+FROM alpine:edge
+
+LABEL maintainer="Jonathan Goldfarb <jgoldfar@my.fit.edu>"
+
+RUN apk add --no-cache \
+      curl \
+      git \
+      mercurial \
+      gcc \
+      libc-dev \
+      zlib-dev \
+      linux-headers \
+      make && \
+    apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ sbcl
+
+ENV SBCLPath=/opt/sbcl
+
+RUN mkdir -p ${SBCLPath} && \
+    git clone https://git.code.sf.net/p/sbcl/sbcl ${SBCLPath} && \
+    cd ${SBCLPath} && \
+    sh make.sh && \
+    sh install.sh
+
+RUN apk del --no-cache sbcl gcc make linux-headers libc-dev

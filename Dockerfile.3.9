@@ -1,0 +1,41 @@
+FROM alpine:3.9
+
+LABEL maintainer="Jonathan Goldfarb <jgoldfar@my.fit.edu>"
+
+RUN apk add --no-cache \
+      curl \
+      git \
+      mercurial \
+      gcc \
+      libc-dev \
+      zlib-dev \
+      linux-headers \
+      make
+
+RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ sbcl
+
+#ENV CLISPPath=/opt/clisp
+
+#RUN mkdir -p ${CLISPPath} && \
+#    hg clone http://hg.code.sf.net/p/clisp/clisp ${CLISPPath}
+
+#RUN mkdir ${CLISPPath}/prerequisites && \
+#    cd ${CLISPPath}/prerequisites && \ 
+#    curl -L https://ftp.gnu.org/gnu/libsigsegv/libsigsegv-2.12.tar.gz -o libsigsegv-2.12.tar.gz && \
+#    tar xfz libsigsegv-2.12.tar.gz && \
+#    cd libsigsegv-2.12 && \
+#    ./configure --prefix=${CLISPPath}/prerequisites/x86_64-pc-linux-musl && make && make check && make install
+
+#RUN cd ${CLISPPath} && \
+#    FORCE_UNSAFE_CONFIGURE=1 ./configure --with-libsigsegv-prefix=${CLISPPath}/prerequisites/x86_64-pc-linux-musl build/ && cd build && \
+#    make && make install && rm -rf ${CLISPPath}
+
+ENV SBCLPath=/opt/sbcl
+
+RUN mkdir -p ${SBCLPath} && git clone https://git.code.sf.net/p/sbcl/sbcl ${SBCLPath}
+
+RUN cd ${SBCLPath} && \
+    sh make.sh && \
+    sh install.sh
+
+RUN apk del --no-cache sbcl gcc make linux-headers libc-dev
