@@ -4,6 +4,9 @@ Bootstrapped SBCL build on Alpine
 [![Docker Build Status](https://img.shields.io/docker/build/jgoldfar/alpine-sbcl.svg) ![Docker Pulls](https://img.shields.io/docker/pulls/jgoldfar/alpine-sbcl.svg)](https://hub.docker.com/r/jgoldfar/alpine-sbcl/)
 [![Build Status](https://travis-ci.org/jgoldfar/alpine-sbcl.svg?branch=master)](https://travis-ci.org/jgoldfar/alpine-sbcl)
 
+Updated images based on [andron94](https://github.com/ANDRON94/dockerfile-sbcl/)'s SBCL build for Alpine.
+Needed for Maxima image.
+
 Setup
 -----
 First, add your local user to docker group:
