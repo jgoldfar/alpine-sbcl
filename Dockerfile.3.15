@@ -51,15 +51,16 @@ RUN cp ${ALPINE_REPOSITORIES} ${ALPINE_REPOSITORIES}.backup &&\
     gcc \
     make \
     sbcl \
-    git &&\
-    sed -i "s/.*OVERFLOW.*/&\n${NETDB_PATCH}/" /usr/include/netdb.h &&\
-    mkdir /home/temp && cd /home/temp &&\
-    git clone ${SBCL_URL} && cd ${SBCL_DIR} &&\
-    git checkout ${SBCL_RELEASE} &&\
-    sh make.sh && sh install.sh &&\
-    rm -fr /usr/local/share/* &&\
-    cd /home && rm -rf temp &&\
-    apk del build-deps &&\
-    cp ${ALPINE_REPOSITORIES}.backup ${ALPINE_REPOSITORIES} &&\
-    rm ${ALPINE_REPOSITORIES}.backup &&\
-    rm -fr /var/cache/apk/*
+    git
+    # &&\
+    # sed -i "s/.*OVERFLOW.*/&\n${NETDB_PATCH}/" /usr/include/netdb.h &&\
+    # mkdir /home/temp && cd /home/temp &&\
+    # git clone ${SBCL_URL} && cd ${SBCL_DIR} &&\
+    # git checkout ${SBCL_RELEASE} &&\
+    # sh make.sh && sh install.sh &&\
+    # rm -fr /usr/local/share/* &&\
+    # cd /home && rm -rf temp &&\
+    # apk del build-deps &&\
+    # cp ${ALPINE_REPOSITORIES}.backup ${ALPINE_REPOSITORIES} &&\
+    # rm ${ALPINE_REPOSITORIES}.backup &&\
+    # rm -fr /var/cache/apk/*
