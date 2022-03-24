@@ -2,10 +2,8 @@ Bootstrapped SBCL build on Alpine
 =====
 
 [![Docker Build Status](https://img.shields.io/docker/build/jgoldfar/alpine-sbcl.svg) ![Docker Pulls](https://img.shields.io/docker/pulls/jgoldfar/alpine-sbcl.svg)](https://hub.docker.com/r/jgoldfar/alpine-sbcl/)
-[![Build Status](https://travis-ci.org/jgoldfar/alpine-sbcl.svg?branch=master)](https://travis-ci.org/jgoldfar/alpine-sbcl)
 
 Updated images based on [andron94](https://github.com/ANDRON94/dockerfile-sbcl/)'s SBCL build for Alpine.
-Needed for Maxima image.
 
 Setup
 -----
@@ -28,4 +26,4 @@ Usage:
 docker run --rm -i --user="$(id -u):$(id -g)" --net=none -v "$(pwd)":/data jgoldfar/alpine-sbcl
 ```
 
-`WORKDIRs` match, mounted to `/data` inside container.
+The `WORKDIR` in the container is `/data`, and with the above command the working directory is mounted to `/data` inside container.

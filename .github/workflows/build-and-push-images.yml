@@ -1,0 +1,34 @@
+name: Build and push docker images
+
+on:
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: '30 5 * * 3'
+
+# Set env variables
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
+  REPO_NAME: ${{secrets.REPO_NAME}}
+
+jobs:
+  build-and-push:
+    runs-on: 'ubuntu-20.04'
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout the commit triggering this job
+        uses: actions/checkout@v2
+
+      - name: Login to Docker
+        run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+
+      - name: Build image
+        run: |
+          ID=$(docker build -q .)
+          echo "::set-output name=docker_image_id::${ID}"
+
+      # - name: Push image to docker with Github commit
+      #   if: ${{ github.event_name == 'push' }}
+      #   run:
