@@ -18,8 +18,7 @@ jobs:
     runs-on: 'ubuntu-20.04'
     strategy:
       matrix:
-        # alpine_version: ['3.9', '3.15', 'edge']
-        alpine_version: ['3.15']
+        alpine_version: ['3.9', '3.15', 'edge']
     steps:
       # https://github.com/actions/checkout
       - name: Checkout the commit triggering this job
@@ -29,10 +28,18 @@ jobs:
         run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN
 
       - name: Build image for ${{matrix.alpine_version}}
+        id: build_image
         run: |
           ID=$(docker build -q -f Dockerfile.${{matrix.alpine_version}} .)
           echo "::set-output name=docker_image_id::${ID}"
 
-      # - name: Push image to docker with Github commit
-      #   if: ${{ github.event_name == 'push' }}
-      #   run:
+      - name: Tag image with git SHA and latest
+        run: |
+          docker tag ${{steps.build_image.outputs.docker_image_id}} $DOCKER_USER/$REPO_TOKEN:$GITHUB_SHA
+          docker tag ${{steps.build_image.outputs.docker_image_id}} $DOCKER_USER/$REPO_TOKEN:latest
+
+      - name: Push tagged images to docker
+        if: ${{ github.ref_protected }}
+        run: |
+          docker push $DOCKER_USER/$REPO_TOKEN:$GITHUB_SHA
+          docker push $DOCKER_USER/$REPO_TOKEN:latest
