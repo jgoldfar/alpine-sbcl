@@ -16,6 +16,10 @@ env:
 jobs:
   build-and-push:
     runs-on: 'ubuntu-20.04'
+    strategy:
+      matrix:
+        # alpine_version: ['3.9', '3.15', 'edge']
+        alpine_version: ['3.15']
     steps:
       # https://github.com/actions/checkout
       - name: Checkout the commit triggering this job
@@ -24,9 +28,9 @@ jobs:
       - name: Login to Docker
         run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN
 
-      - name: Build image
+      - name: Build image for ${{matrix.alpine_version}}
         run: |
-          ID=$(docker build -q .)
+          ID=$(docker build -q -f Dockerfile.${{matrix.alpine_version}} .)
           echo "::set-output name=docker_image_id::${ID}"
 
       # - name: Push image to docker with Github commit
