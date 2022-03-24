@@ -18,7 +18,7 @@ jobs:
     runs-on: 'ubuntu-20.04'
     strategy:
       matrix:
-        alpine_version: ['3.9', '3.15', 'edge']
+        alpine_version: ['3.15', 'edge']
     steps:
       # https://github.com/actions/checkout
       - name: Checkout the commit triggering this job
@@ -35,11 +35,11 @@ jobs:
 
       - name: Tag image with git SHA and latest
         run: |
-          docker tag ${{steps.build_image.outputs.docker_image_id}} $DOCKER_USER/$REPO_TOKEN:$GITHUB_SHA
-          docker tag ${{steps.build_image.outputs.docker_image_id}} $DOCKER_USER/$REPO_TOKEN:latest
+          docker tag ${{steps.build_image.outputs.docker_image_id}} $DOCKER_USER/$REPO_TOKEN:${{matrix.alpine_version}}-$GITHUB_SHA
+          docker tag ${{steps.build_image.outputs.docker_image_id}} $DOCKER_USER/$REPO_TOKEN:${{matrix.alpine_version}}-latest
 
       - name: Push tagged images to docker
         if: ${{ github.ref_protected }}
         run: |
-          docker push $DOCKER_USER/$REPO_TOKEN:$GITHUB_SHA
-          docker push $DOCKER_USER/$REPO_TOKEN:latest
+          docker push $DOCKER_USER/$REPO_TOKEN:${{matrix.alpine_version}}-$GITHUB_SHA
+          docker push $DOCKER_USER/$REPO_TOKEN:${{matrix.alpine_version}}-latest
