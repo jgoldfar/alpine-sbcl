@@ -43,24 +43,24 @@ ENV NETDB_PATCH "\n#define NETDB_INTERNAL -1\n#define NETDB_SUCCESS 0"
 #  12. Remove unnecessary build dependencies.
 #  13. Restore Alpine repositories.
 #  14. Clean package list.
-RUN cp ${ALPINE_REPOSITORIES} ${ALPINE_REPOSITORIES}.backup &&\
-    echo ${ALPINE_EDGE_REPOSITORY} >> ${ALPINE_REPOSITORIES} &&\
-    apk update &&\
-    apk add --no-cache --virtual build-deps \
-    linux-headers \
-    musl-dev \
-    gcc \
-    make \
-    sbcl \
-    git &&\
-    sed -i "s/.*OVERFLOW.*/&\n${NETDB_PATCH}/" /usr/include/netdb.h &&\
-    mkdir /home/temp && cd /home/temp &&\
-    git clone ${SBCL_URL} && cd ${SBCL_DIR} &&\
-    git checkout ${SBCL_RELEASE} &&\
-    sh make.sh && sh install.sh &&\
-    rm -fr /usr/local/share/* &&\
-    cd /home && rm -rf temp &&\
-    apk del build-deps &&\
-    cp ${ALPINE_REPOSITORIES}.backup ${ALPINE_REPOSITORIES} &&\
-    rm ${ALPINE_REPOSITORIES}.backup &&\
-    rm -fr /var/cache/apk/*
+RUN cp ${ALPINE_REPOSITORIES} ${ALPINE_REPOSITORIES}.backup \
+    && echo ${ALPINE_EDGE_REPOSITORY} >> ${ALPINE_REPOSITORIES} \
+    && apk update \
+    && apk add --no-cache --virtual build-deps \
+      linux-headers \
+      musl-dev \
+      gcc \
+      make \
+      sbcl \
+      git \
+    && sed -i "s/.*OVERFLOW.*/&\n${NETDB_PATCH}/" /usr/include/netdb.h \
+    && mkdir /home/temp && cd /home/temp \
+    && git clone ${SBCL_URL} && cd ${SBCL_DIR} \
+    && git checkout ${SBCL_RELEASE} \
+    && sh make.sh && sh install.sh \
+    && rm -fr /usr/local/share/* \
+    && cd /home && rm -rf temp \
+    && apk del build-deps \
+    && cp ${ALPINE_REPOSITORIES}.backup ${ALPINE_REPOSITORIES} \
+    && rm ${ALPINE_REPOSITORIES}.backup \
+    && rm -fr /var/cache/apk/*
