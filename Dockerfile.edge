@@ -1,6 +1,6 @@
 FROM alpine:edge
 
-LABEL maintainer="Jonathan Goldfarb <jgoldfar@my.fit.edu>"
+LABEL maintainer="Jonathan Goldfarb <jgoldfar@gmail.com>"
 
 # ================================ Install SBCL ================================
 
@@ -8,7 +8,7 @@ LABEL maintainer="Jonathan Goldfarb <jgoldfar@my.fit.edu>"
 ENV ALPINE_EDGE_REPOSITORY http://dl-4.alpinelinux.org/alpine/edge/testing
 
 # 2. Convenient definitions.
-ENV SBCL_VERSION 1.4.8
+ENV SBCL_VERSION 2.2.2
 
 ENV SBCL_DIR sbcl
 
@@ -16,9 +16,9 @@ ENV ALPINE_REPOSITORIES /etc/apk/repositories
 
 # 3. Official SBCL sources don't compile under Musl.
 #    I will use my andron94's repository with fixes.
-ENV SBCL_URL https://github.com/andron94/sbcl
+ENV SBCL_URL https://github.com/sbcl/sbcl
 
-ENV SBCL_RELEASE ${SBCL_DIR}-${SBCL_VERSION}-musl
+ENV SBCL_RELEASE ${SBCL_DIR}-${SBCL_VERSION}
 
 # 4. 'sb-bsd-sockets' contribution requires 'NETDB_INTERNAL'
 #    and 'NETDB_SUCCESS' macros which Musl doesn't define.
@@ -43,24 +43,24 @@ ENV NETDB_PATCH "\n#define NETDB_INTERNAL -1\n#define NETDB_SUCCESS 0"
 #  12. Remove unnecessary build dependencies.
 #  13. Restore Alpine repositories.
 #  14. Clean package list.
-RUN cp ${ALPINE_REPOSITORIES} ${ALPINE_REPOSITORIES}.backup &&\
-    echo ${ALPINE_EDGE_REPOSITORY} >> ${ALPINE_REPOSITORIES} &&\
-    apk update &&\
-    apk add --no-cache --virtual build-deps \
-    linux-headers \
-    musl-dev \
-    gcc \
-    make \
-    sbcl \
-    git &&\
-    sed -i "s/.*OVERFLOW.*/&\n${NETDB_PATCH}/" /usr/include/netdb.h &&\
-    mkdir /home/temp && cd /home/temp &&\
-    git clone ${SBCL_URL} && cd ${SBCL_DIR} &&\
-    git checkout ${SBCL_RELEASE} &&\
-    sh make.sh && sh install.sh &&\
-    rm -fr /usr/local/share/* &&\
-    cd /home && rm -rf temp &&\
-    apk del build-deps &&\
-    cp ${ALPINE_REPOSITORIES}.backup ${ALPINE_REPOSITORIES} &&\
-    rm ${ALPINE_REPOSITORIES}.backup &&\
-    rm -fr /var/cache/apk/*
+RUN cp ${ALPINE_REPOSITORIES} ${ALPINE_REPOSITORIES}.backup \
+    && echo ${ALPINE_EDGE_REPOSITORY} >> ${ALPINE_REPOSITORIES} \
+    && apk update \
+    && apk add --no-cache --virtual build-deps \
+      linux-headers \
+      musl-dev \
+      gcc \
+      make \
+      sbcl \
+      git \
+    && sed -i "s/.*OVERFLOW.*/&\n${NETDB_PATCH}/" /usr/include/netdb.h \
+    && mkdir /home/temp && cd /home/temp \
+    && git clone ${SBCL_URL} && cd ${SBCL_DIR} \
+    && git checkout ${SBCL_RELEASE} \
+    && sh make.sh && sh install.sh \
+    && rm -fr /usr/local/share/* \
+    && cd /home && rm -rf temp \
+    && apk del build-deps \
+    && cp ${ALPINE_REPOSITORIES}.backup ${ALPINE_REPOSITORIES} \
+    && rm ${ALPINE_REPOSITORIES}.backup \
+    && rm -fr /var/cache/apk/*

@@ -2,23 +2,17 @@ Bootstrapped SBCL build on Alpine
 =====
 
 [![Docker Build Status](https://img.shields.io/docker/build/jgoldfar/alpine-sbcl.svg) ![Docker Pulls](https://img.shields.io/docker/pulls/jgoldfar/alpine-sbcl.svg)](https://hub.docker.com/r/jgoldfar/alpine-sbcl/)
-[![Build Status](https://travis-ci.org/jgoldfar/alpine-sbcl.svg?branch=master)](https://travis-ci.org/jgoldfar/alpine-sbcl)
 
-Updated images based on [andron94](https://github.com/ANDRON94/dockerfile-sbcl/)'s SBCL build for Alpine.
-Needed for Maxima image.
+[![Build and push docker images](https://github.com/jgoldfar/alpine-sbcl/actions/workflows/build-and-push-images.yml/badge.svg)](https://github.com/jgoldfar/alpine-sbcl/actions/workflows/build-and-push-images.yml)
+
+Updated images for a [SBCL](https://www.github.com/sbcl/sbcl) build for Alpine.
 
 Setup
 -----
-First, add your local user to docker group:
+Get [Docker](http://www.docker.io/) configured on your system, then build the image with
 
 ```shell
-sudo usermod -aG docker YOURUSERNAME
-```
-
-build:
-
-```shell
-docker build -t jgoldfar/alpine-sbcl .
+docker build -t jgoldfar/alpine-sbcl -f Dockerfile.3.15 .
 ```
 
 Usage:
@@ -28,4 +22,4 @@ Usage:
 docker run --rm -i --user="$(id -u):$(id -g)" --net=none -v "$(pwd)":/data jgoldfar/alpine-sbcl
 ```
 
-`WORKDIRs` match, mounted to `/data` inside container.
+The `WORKDIR` in the container is `/data`, and with the above command the working directory is mounted to `/data` inside container.
