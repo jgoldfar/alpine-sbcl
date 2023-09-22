@@ -1,0 +1,11 @@
+FROM alpine:3.18
+
+LABEL maintainer="Jonathan Goldfarb <jgoldfar@gmail.com>"
+
+# ================================ Install SBCL ================================
+RUN apk update \
+    && apk add --no-cache \
+      make \
+      sbcl \
+      git \
+    && rm -fr /var/cache/apk/*
