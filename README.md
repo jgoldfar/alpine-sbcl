@@ -1,7 +1,7 @@
 Bootstrapped SBCL build on Alpine
 =====
 
-[![Docker Build Status](https://img.shields.io/docker/build/jgoldfar/alpine-sbcl.svg) ![Docker Pulls](https://img.shields.io/docker/pulls/jgoldfar/alpine-sbcl.svg)](https://hub.docker.com/r/jgoldfar/alpine-sbcl/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jgoldfar/alpine-sbcl.svg)](https://hub.docker.com/r/jgoldfar/alpine-sbcl/)
 
 [![Build and push docker images](https://github.com/jgoldfar/alpine-sbcl/actions/workflows/build-and-push-images.yml/badge.svg)](https://github.com/jgoldfar/alpine-sbcl/actions/workflows/build-and-push-images.yml)
 
@@ -12,7 +12,7 @@ Setup
 Get [Docker](http://www.docker.io/) configured on your system, then build the image with
 
 ```shell
-docker build -t jgoldfar/alpine-sbcl -f Dockerfile.3.15 .
+docker build -t jgoldfar/alpine-sbcl -f Dockerfile.3.17 .
 ```
 
 Usage:
