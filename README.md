@@ -7,6 +7,13 @@ Bootstrapped SBCL build on Alpine
 
 Updated images for a [SBCL](https://www.github.com/sbcl/sbcl) build for Alpine.
 
+> This program is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+For more information, reach out to the team at [desert.frog.solutions@gmail.com](mailto:desert.frog.solutions@gmail.com) or [desertfrogsolutions.com](https://desertfrogsolutions.com)
+
+
 Setup
 -----
 Get [Docker](http://www.docker.io/) configured on your system, then build the image with
