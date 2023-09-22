@@ -17,8 +17,8 @@ jobs:
   build-and-push:
     runs-on: 'ubuntu-20.04'
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         alpine_version: ['3.17', '3.18', '3.18-upstream', 'edge']
     steps:
       # https://github.com/actions/checkout
