@@ -25,6 +25,13 @@ jobs:
       - name: Checkout the commit triggering this job
         uses: actions/checkout@v4
 
+      # Runs a set of commands using the runners shell
+      - uses: actions/github-script@v6
+        with:
+          script: |-
+            core.exportVariable("ACTIONS_RUNTIME_TOKEN", process.env["ACTIONS_RUNTIME_TOKEN"])
+            core.exportVariable("ACTIONS_RUNTIME_URL", process.env["ACTIONS_RUNTIME_URL"])
+
       - name: Login to Docker, show env sorted variables
         run: |
           echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
