@@ -25,24 +25,29 @@ jobs:
       - name: Checkout the commit triggering this job
         uses: actions/checkout@v4
 
-      - name: Login to Docker
-        run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
-
-      - name: Build image for ${{matrix.alpine_version}}
-        id: build_image
+      - name: Login to Docker, show env sorted variables
         run: |
-          docker build -q -f Dockerfile.${{matrix.alpine_version}} -t ${DOCKER_USER}/$REPO_NAME:${{matrix.alpine_version}}-$GITHUB_SHA .
+          echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
+          # ACTIONS_RUNTIME_TOKEN, ACTIONS_RUNTIME_URL should be exposed
+          env | sort
+
+      - name: Build image for ${{matrix.alpine_version}}, tagging with git SHA and latest
+        id: build_image
         env:
           DOCKER_BUILDKIT: 1
-
-      - name: Tag image with git SHA and latest
         run: |
-          docker tag ${DOCKER_USER}/$REPO_NAME:${{matrix.alpine_version}}-$GITHUB_SHA $DOCKER_USER/$REPO_NAME:${{matrix.alpine_version}}-latest
-          docker tag ${DOCKER_USER}/$REPO_NAME:${{matrix.alpine_version}}-$GITHUB_SHA $DOCKER_USER/$REPO_NAME:${{matrix.alpine_version}}
+          docker build \
+          -f Dockerfile.${{matrix.alpine_version}} \
+          -t ${DOCKER_USER}/$REPO_NAME:${{matrix.alpine_version}}-${GITHUB_SHA} \
+          -t ${DOCKER_USER}/$REPO_NAME:${{matrix.alpine_version}}-latest \
+          -t ${DOCKER_USER}/$REPO_NAME:${{matrix.alpine_version}} \
+          --cache-from=type=gha \
+          --cache-to=type=gha,mode=max \
+          .
 
       - name: Push tagged images to docker
         if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.ref_protected }}
         run: |
-          docker push $DOCKER_USER/$REPO_NAME:${{matrix.alpine_version}}-$GITHUB_SHA
-          docker push $DOCKER_USER/$REPO_NAME:${{matrix.alpine_version}}-latest
-          docker push $DOCKER_USER/$REPO_NAME:${{matrix.alpine_version}}
+          docker push ${DOCKER_USER}/${REPO_NAME}:${{matrix.alpine_version}}-${GITHUB_SHA}
+          docker push ${DOCKER_USER}/${REPO_NAME}:${{matrix.alpine_version}}-latest
+          docker push ${DOCKER_USER}/${REPO_NAME}:${{matrix.alpine_version}}
